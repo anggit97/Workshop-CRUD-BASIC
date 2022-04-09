@@ -1,0 +1,5 @@
+package com.example.crud
+
+object AppConstant {
+    const val TOKEN_JWT = "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpc3MiOiJodHRwczpcL1wvaHNvcHJvc3BleC5jb21cL2FwaVwvbG9naW5BcGkiLCJpYXQiOjE2NDk1MDY2MDUsImV4cCI6MTY2NTA1ODYwNSwibmJmIjoxNjQ5NTA2NjA1LCJqdGkiOiJuTVJHZkF3aVdlMG5HYndXIiwic3ViIjoxMjUsInBydiI6Ijg3ZTBhZjFlZjlmZDE1ODEyZmRlYzk3MTUzYTE0ZTBiMDQ3NTQ2YWEifQ.N9jaO8q8GdV0sh2pFyu6NHVU9i-onu3BnLHCk4C4kGo"
+}
