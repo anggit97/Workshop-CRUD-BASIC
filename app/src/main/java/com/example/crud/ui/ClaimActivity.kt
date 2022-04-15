@@ -1,6 +1,7 @@
-package com.example.crud
+package com.example.crud.ui
 
 import android.content.DialogInterface
+import android.content.Intent
 import android.os.Bundle
 import android.util.Log
 import android.widget.Toast
@@ -8,6 +9,8 @@ import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import com.example.crud.AppConstant
+import com.example.crud.R
 import com.example.crud.adapter.ClaimAdapter
 import com.example.crud.adapter.ClaimAdapterClickListener
 import com.example.crud.api.PosApiClient
@@ -15,6 +18,7 @@ import com.example.crud.api.PosServiceGenerator
 import com.example.crud.model.ClaimDeleteResponse
 import com.example.crud.model.ClaimListResponse
 import com.example.crud.model.Claimahas
+import com.google.android.material.floatingactionbutton.FloatingActionButton
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
@@ -31,6 +35,7 @@ class ClaimActivity : AppCompatActivity(), ClaimAdapterClickListener {
         setContentView(R.layout.activity_claim)
 
         val rvClaim = findViewById<RecyclerView>(R.id.rvList)
+        val fabCreate = findViewById<FloatingActionButton>(R.id.fabCreate)
 
         adapter = ClaimAdapter()
         adapter.setClickListener(this)
@@ -38,13 +43,21 @@ class ClaimActivity : AppCompatActivity(), ClaimAdapterClickListener {
         rvClaim.layoutManager = LinearLayoutManager(this, LinearLayoutManager.VERTICAL, false)
         rvClaim.adapter = adapter
 
+        fabCreate.setOnClickListener {
+            val intent = Intent(this, CreateUpdateActivity::class.java)
+            startActivity(intent)
+        }
+    }
+
+    override fun onResume() {
+        super.onResume()
         getDataClaim()
     }
 
     private fun getDataClaim() {
         val client: PosApiClient =
             PosServiceGenerator.createService(PosApiClient::class.java)
-        client.getClaimList("bearer ${AppConstant.TOKEN_JWT}").enqueue(object : Callback<ClaimListResponse> {
+        client.getClaimList(AppConstant.TOKEN_JWT).enqueue(object : Callback<ClaimListResponse> {
             override fun onResponse(
                 call: Call<ClaimListResponse>,
                 response: Response<ClaimListResponse>
@@ -66,6 +79,11 @@ class ClaimActivity : AppCompatActivity(), ClaimAdapterClickListener {
 
     companion object {
         const val TAG = "ClaimActivity"
+    }
+
+    override fun onClickItem(claim: Claimahas) {
+        val intent = Intent(this, CreateUpdateActivity::class.java)
+        startActivity(intent)
     }
 
     override fun onClickDelete(claimId: String) {

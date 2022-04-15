@@ -38,6 +38,10 @@ class ClaimAdapter : RecyclerView.Adapter<ClaimAdapter.ViewHolder>() {
                 listener.onClickDelete(item.id.toString())
                 return@setOnLongClickListener true
             }
+
+            view.root.setOnClickListener {
+                listener.onClickItem(item)
+            }
         }
     }
 
@@ -61,4 +65,5 @@ class ClaimAdapter : RecyclerView.Adapter<ClaimAdapter.ViewHolder>() {
 
 interface ClaimAdapterClickListener {
     fun onClickDelete(claimId: String)
+    fun onClickItem(claim: Claimahas)
 }
