@@ -2,4 +2,5 @@ package com.example.crud
 
 object AppConstant {
     const val TOKEN_JWT = "bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpc3MiOiJodHRwczpcL1wvaHNvcHJvc3BleC5jb21cL2FwaVwvbG9naW5BcGkiLCJpYXQiOjE2NTAwMjE0NzEsImV4cCI6MTY2NTU3MzQ3MSwibmJmIjoxNjUwMDIxNDcxLCJqdGkiOiJMbkplQThGYnlUVjViaUVPIiwic3ViIjoxMjUsInBydiI6Ijg3ZTBhZjFlZjlmZDE1ODEyZmRlYzk3MTUzYTE0ZTBiMDQ3NTQ2YWEifQ.MhEKOPlyUGgVyEdya50SrjCcJ75cvtxhbQ4RtU3On7k"
+    const val ITEM_KEY = "item_key"
 }

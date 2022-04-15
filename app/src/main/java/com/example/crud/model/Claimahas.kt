@@ -1,8 +1,11 @@
 package com.example.crud.model
 
 
+import android.os.Parcelable
 import com.google.gson.annotations.SerializedName
+import kotlinx.parcelize.Parcelize
 
+@Parcelize
 data class Claimahas(
     @SerializedName("created_at")
     val createdAt: String,
@@ -44,4 +47,4 @@ data class Claimahas(
     val tglStatusStatusClosing: String?,
     @SerializedName("tgl_status_status_request")
     val tglStatusStatusRequest: String?
-)
+) : Parcelable

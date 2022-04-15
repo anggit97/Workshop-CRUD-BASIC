@@ -1,9 +1,6 @@
 package com.example.crud.api
 
-import com.example.crud.model.ClaimCreateRequest
-import com.example.crud.model.ClaimCreateResponse
-import com.example.crud.model.ClaimDeleteResponse
-import com.example.crud.model.ClaimListResponse
+import com.example.crud.model.*
 import retrofit2.Call
 import retrofit2.http.*
 
@@ -18,4 +15,7 @@ interface PosApiClient {
 
     @POST("createclaim_api")
     fun createClaim(@Header("Authorization") authToken: String, @Body claimRequest: ClaimCreateRequest) : Call<ClaimCreateResponse>
+
+    @PUT("update_claim/{claimId}")
+    fun updateClaim(@Header("Authorization") authToken: String, @Path("claimId") claimId: String, @Body claimRequest: ClaimCreateRequest) : Call<UpdateClaimResponse>
 }

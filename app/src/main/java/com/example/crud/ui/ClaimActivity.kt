@@ -7,6 +7,7 @@ import android.util.Log
 import android.widget.Toast
 import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
+import androidx.recyclerview.widget.DividerItemDecoration
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.example.crud.AppConstant
@@ -41,6 +42,7 @@ class ClaimActivity : AppCompatActivity(), ClaimAdapterClickListener {
         adapter.setClickListener(this)
 
         rvClaim.layoutManager = LinearLayoutManager(this, LinearLayoutManager.VERTICAL, false)
+        rvClaim.addItemDecoration(DividerItemDecoration(this, LinearLayoutManager.VERTICAL))
         rvClaim.adapter = adapter
 
         fabCreate.setOnClickListener {
@@ -83,6 +85,7 @@ class ClaimActivity : AppCompatActivity(), ClaimAdapterClickListener {
 
     override fun onClickItem(claim: Claimahas) {
         val intent = Intent(this, CreateUpdateActivity::class.java)
+        intent.putExtra(AppConstant.ITEM_KEY, claim)
         startActivity(intent)
     }
 

@@ -5,6 +5,7 @@ import android.os.Bundle
 import android.util.Log
 import android.view.View
 import android.widget.Button
+import android.widget.ImageView
 import android.widget.ProgressBar
 import android.widget.Toast
 import com.example.crud.AppConstant
@@ -13,6 +14,8 @@ import com.example.crud.api.PosApiClient
 import com.example.crud.api.PosServiceGenerator
 import com.example.crud.model.ClaimCreateRequest
 import com.example.crud.model.ClaimCreateResponse
+import com.example.crud.model.Claimahas
+import com.example.crud.model.UpdateClaimResponse
 import com.google.android.material.textfield.TextInputEditText
 import retrofit2.Call
 import retrofit2.Callback
@@ -29,6 +32,9 @@ class CreateUpdateActivity : AppCompatActivity() {
     private lateinit var note: TextInputEditText
     private lateinit var btnSave: Button
     private lateinit var pbLoading: ProgressBar
+    private lateinit var ivBack: ImageView
+
+    private var claimahas: Claimahas? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -43,7 +49,22 @@ class CreateUpdateActivity : AppCompatActivity() {
         note = findViewById(R.id.etNote)
         btnSave = findViewById(R.id.btnSave)
         pbLoading = findViewById(R.id.pbLoading)
+        ivBack = findViewById(R.id.ivBack)
 
+        claimahas = intent.getParcelableExtra(AppConstant.ITEM_KEY)
+        if (claimahas != null){
+            customer.setText(claimahas?.customer)
+            customerName.setText(claimahas?.customerName)
+            partNumber.setText(claimahas?.partNumber)
+            description.setText(claimahas?.description)
+            qty.setText(claimahas?.qty.toString())
+            claimDate.setText(claimahas?.tglClaim)
+            note.setText(claimahas?.keterangan)
+        }
+
+        ivBack.setOnClickListener {
+            finish()
+        }
 
         btnSave.setOnClickListener {
             val customerValue = customer.text.toString()
@@ -106,9 +127,55 @@ class CreateUpdateActivity : AppCompatActivity() {
                     claimDateValue
                 )
 
-                createClaim(request)
+                val isEditMode = claimahas == null
+
+                if (isEditMode){
+                    editClaim(request)
+                }else{
+                    createClaim(request)
+                }
             }
         }
+    }
+
+    private fun editClaim(request: ClaimCreateRequest){
+        if (claimahas?.id == null) return
+
+        pbLoading.visibility = View.VISIBLE
+        val client: PosApiClient = PosServiceGenerator.createService(PosApiClient::class.java)
+        client.updateClaim(AppConstant.TOKEN_JWT, claimahas?.id.toString(), request)
+            .enqueue(object : Callback<UpdateClaimResponse> {
+                override fun onResponse(
+                    call: Call<UpdateClaimResponse>,
+                    response: Response<UpdateClaimResponse>
+                ) {
+                    pbLoading.visibility = View.GONE
+                    if (response.isSuccessful) {
+                        Toast.makeText(
+                            this@CreateUpdateActivity,
+                            "Berhasil update claim",
+                            Toast.LENGTH_SHORT
+                        ).show()
+                        finish()
+                    } else {
+                        Toast.makeText(
+                            this@CreateUpdateActivity,
+                            "Terjadi Kesalahan",
+                            Toast.LENGTH_SHORT
+                        ).show()
+                    }
+                }
+
+                override fun onFailure(call: Call<UpdateClaimResponse>, t: Throwable) {
+                    pbLoading.visibility = View.GONE
+                    Log.e(TAG, "onFailure: ", t)
+                    Toast.makeText(
+                        this@CreateUpdateActivity,
+                        "Terjadi Kesalahan",
+                        Toast.LENGTH_SHORT
+                    ).show()
+                }
+            })
     }
 
     private fun createClaim(request: ClaimCreateRequest) {
