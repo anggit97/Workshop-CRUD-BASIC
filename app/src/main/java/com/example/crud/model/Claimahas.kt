@@ -47,4 +47,9 @@ data class Claimahas(
     val tglStatusStatusClosing: String?,
     @SerializedName("tgl_status_status_request")
     val tglStatusStatusRequest: String?
-) : Parcelable
+) : Parcelable {
+
+    override fun toString(): String {
+        return partNumber
+    }
+}

@@ -3,6 +3,8 @@
   <component name="DesignSurface">
     <option name="filePathToZoomLevelMap">
       <map>
+        <entry key="../../../Library/Android/sdk/platforms/android-32/data/res/layout/simple_dropdown_item_1line.xml" value="0.30625" />
+        <entry key="app/src/main/res/layout/activity_autocomplete_claim.xml" value="0.30625" />
         <entry key="app/src/main/res/layout/activity_claim.xml" value="0.25" />
         <entry key="app/src/main/res/layout/activity_create_update.xml" value="0.25" />
         <entry key="app/src/main/res/layout/activity_main.xml" value="0.4036458333333333" />

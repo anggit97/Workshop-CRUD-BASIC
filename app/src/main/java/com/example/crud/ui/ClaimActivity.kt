@@ -7,6 +7,7 @@ import android.text.Editable
 import android.text.TextWatcher
 import android.util.Log
 import android.view.View
+import android.widget.ImageView
 import android.widget.ProgressBar
 import android.widget.Toast
 import androidx.appcompat.app.AlertDialog
@@ -46,6 +47,7 @@ class ClaimActivity : AppCompatActivity(), ClaimAdapterClickListener {
         val rvClaim = findViewById<RecyclerView>(R.id.rvList)
         val fabCreate = findViewById<FloatingActionButton>(R.id.fabCreate)
         val search = findViewById<TextInputEditText>(R.id.etSearch)
+        val ivAutocompleteClaim = findViewById<ImageView>(R.id.ivAutocomplete)
         pbLoading = findViewById(R.id.pbLoading)
 
         adapter = ClaimAdapter()
@@ -54,6 +56,11 @@ class ClaimActivity : AppCompatActivity(), ClaimAdapterClickListener {
         rvClaim.layoutManager = LinearLayoutManager(this, LinearLayoutManager.VERTICAL, false)
         rvClaim.addItemDecoration(DividerItemDecoration(this, LinearLayoutManager.VERTICAL))
         rvClaim.adapter = adapter
+
+        ivAutocompleteClaim.setOnClickListener {
+            val intent = Intent(this, AutocompleteClaimActivity::class.java)
+            startActivity(intent)
+        }
 
         fabCreate.setOnClickListener {
             val intent = Intent(this, CreateUpdateActivity::class.java)
