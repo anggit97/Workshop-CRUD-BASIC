@@ -10,6 +10,9 @@ interface PosApiClient {
     @GET("showclaim_api")
     fun getClaimList(@Header("Authorization") authToken: String) : Call<ClaimListResponse>
 
+    @GET("searching_claim")
+    fun searchClaimList(@Header("Authorization") authToken: String, @Query("search") search: String) : Call<SearchClaimResponse>
+
     @DELETE("deleteclaim_api/{claimId}")
     fun deleteClaim(@Header("Authorization") authToken: String, @Path("claimId") claimId: String) : Call<ClaimDeleteResponse>
 

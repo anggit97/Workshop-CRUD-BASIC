@@ -3,7 +3,11 @@ package com.example.crud.ui
 import android.content.DialogInterface
 import android.content.Intent
 import android.os.Bundle
+import android.text.Editable
+import android.text.TextWatcher
 import android.util.Log
+import android.view.View
+import android.widget.ProgressBar
 import android.widget.Toast
 import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
@@ -19,17 +23,21 @@ import com.example.crud.api.PosServiceGenerator
 import com.example.crud.model.ClaimDeleteResponse
 import com.example.crud.model.ClaimListResponse
 import com.example.crud.model.Claimahas
+import com.example.crud.model.SearchClaimResponse
 import com.google.android.material.floatingactionbutton.FloatingActionButton
+import com.google.android.material.textfield.TextInputEditText
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
+import java.util.*
 
 
 class ClaimActivity : AppCompatActivity(), ClaimAdapterClickListener {
 
-//    private var claimList = mutableListOf<Claim>()
-
     private lateinit var adapter: ClaimAdapter
+    private var keyword = ""
+
+    private lateinit var pbLoading: ProgressBar
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -37,6 +45,8 @@ class ClaimActivity : AppCompatActivity(), ClaimAdapterClickListener {
 
         val rvClaim = findViewById<RecyclerView>(R.id.rvList)
         val fabCreate = findViewById<FloatingActionButton>(R.id.fabCreate)
+        val search = findViewById<TextInputEditText>(R.id.etSearch)
+        pbLoading = findViewById(R.id.pbLoading)
 
         adapter = ClaimAdapter()
         adapter.setClickListener(this)
@@ -49,6 +59,33 @@ class ClaimActivity : AppCompatActivity(), ClaimAdapterClickListener {
             val intent = Intent(this, CreateUpdateActivity::class.java)
             startActivity(intent)
         }
+
+        search.addTextChangedListener(object: TextWatcher{
+
+            private var timer = Timer()
+            private val DELAY = 1000L //millisecond
+
+            override fun beforeTextChanged(p0: CharSequence?, p1: Int, p2: Int, p3: Int) {
+
+            }
+
+            override fun onTextChanged(p0: CharSequence?, p1: Int, p2: Int, p3: Int) {
+
+            }
+
+            override fun afterTextChanged(editable: Editable?) {
+                if (editable != null){
+                    timer.cancel()
+                    timer = Timer()
+                    timer.schedule(object : TimerTask(){
+                        override fun run() {
+                            keyword = editable.toString()
+                            getDataClaim()
+                        }
+                    }, DELAY)
+                }
+            }
+        })
     }
 
     override fun onResume() {
@@ -57,22 +94,25 @@ class ClaimActivity : AppCompatActivity(), ClaimAdapterClickListener {
     }
 
     private fun getDataClaim() {
+        runOnUiThread { pbLoading.visibility = View.VISIBLE }
         val client: PosApiClient =
             PosServiceGenerator.createService(PosApiClient::class.java)
-        client.getClaimList(AppConstant.TOKEN_JWT).enqueue(object : Callback<ClaimListResponse> {
+        client.searchClaimList(AppConstant.TOKEN_JWT, keyword).enqueue(object : Callback<SearchClaimResponse> {
             override fun onResponse(
-                call: Call<ClaimListResponse>,
-                response: Response<ClaimListResponse>
+                call: Call<SearchClaimResponse>,
+                response: Response<SearchClaimResponse>
             ) {
+                pbLoading.visibility = View.GONE
                 if (response.isSuccessful) {
-                    adapter.setItems(response.body()?.claimahass?.toMutableList() ?: emptyList<Claimahas>() as MutableList<Claimahas>)
+                    adapter.setItems(response.body()?.data?.toMutableList() ?: emptyList<Claimahas>() as MutableList<Claimahas>)
                 } else {
                     Toast.makeText(this@ClaimActivity, "Terjadi kesalahan Response", Toast.LENGTH_SHORT).show()
                     Log.e(TAG, "onFailure: Terjadi Kesalahan")
                 }
             }
 
-            override fun onFailure(call: Call<ClaimListResponse>, t: Throwable) {
+            override fun onFailure(call: Call<SearchClaimResponse>, t: Throwable) {
+                pbLoading.visibility = View.GONE
                 Toast.makeText(this@ClaimActivity, "Terjadi kesalahan", Toast.LENGTH_SHORT).show()
                 Log.e(TAG, "onFailure: ${t.message}", t)
             }
